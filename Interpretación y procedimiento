@@ -1,0 +1,29 @@
+Primer objetivo:
+1. Implementar las 11 especificaciones del trabajo práctico.
+2. Realizar los tests correspondientes (idealmente al terminar cada ejercicio).
+3. (Luego del proximo labo), hacer un analisis de la cobertura de los tests (necesitamos una cobertura de lineas superior al 95%).En caso de nopoder alcanzarla, explicar el motivo.
+4. No est ́a permitido el uso de librer ́ıas de C++ fuera de las cl ́asicas:math,vector,tuple,pair, las de input-output,etc. Consultar con la c ́atedra por cualquier librer ́ıa adicional.
+5: Los archivos son:
+    a. ejercicios.cpp y ejercicios.h para las implementaciones
+    b. definiciones.h donde se definen los "tipos" (Que es un tipo?)
+    c. auxiliares.cppyauxiliares.h: Donde es posible volcar funciones auxiliares
+    d. main.cpp y los tests de cada ejercicio en una carpeta aparte (que en caso de que resulte necesario, habrá que agregar casos de test)
+TIP: Los casos de test provistos son muy útiles a la hora de realizar implementaciones.
+
+INTRO:
+El trabajo se va a tratar sobre la creación de un medio de comunicación de voz entre personas.
+DEFINICIONES:
+Tenemos una secuencia de valores enteros donde cada valor entero es una "muestra" (amplitud de señal).
+La profundidad de la muestra determina el rango de amplitud de señal.
+Rg (p)= [−2^(P−1), 2^(P−1)−1 ]
+
+Las secuencias mencionadas anteriormente serán llamadas "señales".
+señal = [amp1,amp2,...,ampN]
+frecuencia de muestreo es la cantidad de muestras que se colectan por unidad de tiempo (idea: podemos obtenerla haciendo senial.size()/tiempo de la llamada)
+
+"Una reuníon es una secuencia de tuplas sẽnal×hablante que representa la señal que tiene cada persona en una conversacion.
+. Dentro de una reuni ́on, todas las conversaciones comienzan y terminan al mismotiempo  (tienen  la  misma  cantidad  de  muestras).
+Adem ́as,  no  puede  haber  mas  de  una  se ̃nal  para  la  misma  persona.  Laspersonas estar ́an representadas con n ́umeros,
+enteros empezando en 0 (en una reuni ́on denpersonas, se les asignar ́an losn ́umeros  en  el  rango  [0..n−1]).
+Por  ejemplo,  si  en  una  reuni ́on  participan  3  personas,  las  personas  hablando  se  podr ́ıanrepresentar con la secuencia [1, 0, 2]."
+Entonces en una reunión, los primeros elementos de cada elemento (las señales) todas tendrán la misma longitud

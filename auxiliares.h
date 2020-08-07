@@ -15,7 +15,17 @@ float tono(senial s);
 //2(M)
 int promedio(int suma,int tamanio);
 bool hayTonoDeTamanioSQueSupera(senial s, int tamanio, int umbral);
+
 //3 (sin auxiliares)
+bool esMatriz(reunion const &r);
+bool hablantesDeReunionValidos(reunion const &r, int prof, int freq);
+bool esFrecValida(int freq);
+bool enRango(senial s, int prof);
+bool duraMasDe(senial s, int freq, float seg);
+bool profValida(int prof);
+bool esSenialValida(senial s, int prof, int freq);
+bool senialesValidas(reunion const &r, int prof, int freq);
+
 //4
 void acelerarSenial(senial& s);
 //5

@@ -37,3 +37,33 @@ TEST(ralentizar, unHablantesSenialDescendente) {
 
     EXPECT_EQ(meet_res, meet_out);
 }
+TEST(ralentizar, test3){
+    int prof52 = 16;
+    int freq52 = 10;
+
+    senial sig12={ 2,7,2};
+
+    reunion meet_out2 = { make_pair(sig12,0 )  };
+
+    senial sig1_res2={2,4,7,4,2};
+
+    reunion meet_res2 = { make_pair(sig1_res2,0 ) };
+
+    ralentizar(meet_out2,prof52,freq52);
+    EXPECT_EQ(meet_res2, meet_out2);
+}
+TEST(ralentizar, test4){
+    int prof53 = 16;
+    int freq53 = 10;
+
+    senial sig13={ 3,5,4};
+
+    reunion meet_out3 = { make_pair(sig13,0 )  };
+
+    senial sig1_res3={3,4,5,4,4};
+
+    reunion meet_res3 = { make_pair(sig1_res3,0 ) };
+
+    ralentizar(meet_out3,prof53,freq53);
+    EXPECT_EQ(meet_res3,meet_out3 );
+}

@@ -4,8 +4,7 @@
 #include "definiciones.h"
 
 bool esSenial(vector<int> const &s, int prof, int freq);
-bool seEnojo(senial const &s, int umbral, int prof, int freq);//version Juani
-bool seEnojo2(senial const &s, int umbral, int prof, int freq);
+bool seEnojo(senial const &s, int umbral, int prof, int freq);
 bool esReunionValida(reunion const &r, int prof, int freq);
 void acelerar(reunion &r, int prof, int freq);
 void ralentizar(reunion &r, int prof, int freq);

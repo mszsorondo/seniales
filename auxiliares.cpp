@@ -23,19 +23,86 @@ float tono(senial s){
 bool duraMasDe(senial s, int freq, float seg) {
     return s.size() >= freq * seg;
 }
-//2(M)...
-int promedio(int suma,int tamanio){
-    return (suma/tamanio);
-}
-bool hayTonoDeTamanioSQueSupera(senial s, int tamanio, int umbral){
-    int suma = sumatoriaAbsoluta(s, 0, tamanio);
-    bool hayEnojo = promedio(suma,tamanio)>umbral;
-    for(int k = 0 ; (k < s.size() - tamanio) && !hayEnojo ; k++){
-        suma = suma - abs(s[k]) + abs(s[k+tamanio]);
-        hayEnojo = hayEnojo || (promedio(suma,tamanio)>umbral);
+//3...
+bool esMatriz(reunion const &r) {
+    bool result = true;
+    for(int a = 0 ; a < r.size() ; a++){
+        if(r[a].first.size() != r[0].first.size()){
+            result = false;
+        }
     }
-    return hayEnojo;
+    return result;
 }
+
+bool esSenialValidaw(senial s, int prof, int freq) {
+
+    bool result = esFrecValida(freq);
+    result = result && profValida(prof);
+    result = result && enRango(s, prof);
+    result = result && duraMasDe(s, freq, 1);
+
+    return result;
+}
+
+bool senialesValidas(reunion const &r, int prof, int freq) {
+    bool result = true;
+    for(int i = 0 ; i < r.size() ; i++){
+        senial lasenial = r[i].first;
+        if(!esSenialValidaw(lasenial,prof,freq)){
+            result = false;
+        }
+    }
+    return result;
+}
+
+bool hablantesDeReunionValidos(reunion const &r, int prof, int freq) {
+    bool result = true;
+    for(int i = 0 ; i < r.size() ; i++){
+        if(r[i].second < 0 || r[i].second >= r.size()){
+            result = false;
+        }
+        int j = 0;
+        while(j < r.size() && r[j].second == r[i].second){
+            if(i != j){
+                result = false;
+            }
+            j++;
+        }
+    }
+    return result;
+
+}
+bool esSenialValida(vector<int> const& s, int prof, int freq) {
+
+    bool result = esFrecValida(freq);
+    result = result && profValida(prof);
+    result = result && enRango(s, prof);
+    result = result && duraMasDe(s, freq, 1);
+    return result;
+}
+
+bool esFrecValida(int freq) {
+    return freq == 10;
+}
+
+bool enRango(senial s, int prof) {
+    bool result = true;
+    for(int i = 0; i < s.size(); i++){
+        if (pow(-2, prof-1) > s[i] ) {
+            result = false;
+        }
+        if (pow(2, prof-1) - 1 < s[i] ) {
+            result = false;
+        }
+    }
+    return result;
+}
+
+
+bool profValida(int prof) {
+    return prof == 8 || prof == 16 || prof == 32;
+}
+
 
 //4,5...
 void acelerarSenial(senial& s){
@@ -97,15 +164,21 @@ vector<vector<int>> secuenciasDeSilencios(senial s, int umbral){
 
 
     for(int i = 0 ; i < s.size() ; i++){
-        if(abs(s[i]) < umbral){
+        if(abs(s[i]) < umbral){                             //si me cruzo con un silencio, lo pusheo a seqDeSilencio
             seqDeSilencio.push_back(i);
+        }else if(seqDeSilencio.size() > 1){                     //ahora si el que estoy parado no es silencio, miro a ver si tengo      algo en seqDeSilencio como para guardar hasta el momento
+            //cout << i << " : " << seqDeSilencio[i] << endl;
+            seqDeSeqDeSilencio.push_back(seqDeSilencio);        //me guardo la seqDeSilencio que junte hasta ahora
+            limpiar(seqDeSilencio);                         //limpio la seqDeSilencio para poder leer la proxima secuencia de silencio
         }else{
-            seqDeSeqDeSilencio.push_back(seqDeSilencio);
             limpiar(seqDeSilencio);
         }
     }
     //en caso que haya una seqDeSilencio que llegue hasta el final:
-    seqDeSeqDeSilencio.push_back(seqDeSilencio);
+    //seqDeSeqDeSilencio.push_back(seqDeSilencio);
+    if(seqDeSilencio.size() > 1){
+        seqDeSeqDeSilencio.push_back(seqDeSilencio);
+    }
 
 
     return seqDeSeqDeSilencio;
@@ -157,13 +230,7 @@ bool esPasajePorCero(senial s, int i){
 }
 
 //11
-int sumatoriaAbsoluta(vector<int> s, int desde, int hasta){
-    int suma = 0;
-    for(int i = desde; i<hasta ; i++){
-        suma = suma + abs(s[i]);
-    }
-    return suma;
-}
+
 vector<int> copiarSubSecDeLargoFDesde(senial s, vector<int> w, int i){
     for(int k = 0; k < w.size() ; k++){
         w[k] = s[i+k];

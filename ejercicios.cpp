@@ -12,57 +12,56 @@ bool esSenial(vector<int> const& s, int prof, int freq) {
     // Implementacion
     //Diremos que una secuencia es señal cuando freq = 10Hz=10/s; prof = 8 o 16 0 32 y t>1
     //freq = s.size()/t <=> t = s.size()/freq
-    int t = s.size()/freq;
+    float t = s.size()/freq;
     bool profValida = (prof == 8 || prof == 16 || prof == 32);
-    if(freq==10 && profValida && t>1) {
+    if(freq==10 && profValida && t>=1) {
         resp = true;
         for(int i = 0; i<s.size() ; i++){
-            int minimaMuestraValida = (-pow(2,prof-1));
-            int maximaMuestraValida = (pow(2,prof-1)-1);
-            resp = resp && ( minimaMuestraValida <= s[i] && s[i]<= maximaMuestraValida );
+            int minimaMuestraValida = -pow(2,prof-1);
+            int maximaMuestraValida = pow(2,prof-1)-1;
+            resp = resp && ( minimaMuestraValida <= s[i] ) && (s[i]<= maximaMuestraValida );
         }
-    }//DUDA: La spec dice que frecuencia debe ser pow(10,2) y no pow(10,1) como puse aca (y sin embargo el test da true!)
+    }
     return resp;
 }
 
 
-bool seEnojo(senial const& s, int umbral, int prof, int freq) {
-    bool result = false;
-    for(int i = 0; i < s.size() -1; i++) {
-        for (int j = i+1; j < s.size(); j++) {
-            if(duraMasDe(subseq(s,i,j),freq,2) && superaUmbral(subseq(s,i,j),umbral)){
-                result = true;
-            }
+bool seEnojo(senial const &s, int umbral, int prof, int freq){
+    float sumaActual = float(sumatoriaAbsoluta(s,0,s.size()));
+    int largoActual = s.size();
+    int largoMinimo = freq * 2;
+    bool resp = sumaActual/s.size()>umbral;
+    for(int i = 0; (i <= s.size() - largoMinimo) && !resp; i++){
+        float sumaCopia = sumaActual;
+        int largoCopia = largoActual;
+        for(int j = s.size()-1; (j >= largoMinimo) && !resp && j-i>=largoMinimo; j--){
+            resp = resp || (sumaCopia/largoCopia>umbral);
+            sumaCopia = sumaCopia - abs(s[j]);
+            largoCopia--;
         }
+        resp = resp || (sumaActual/largoActual>umbral);
+        sumaActual = sumaActual - abs(s[i]);
+        largoActual--;
     }
+    return resp && largoMinimo<s.size();
+}
+
+int sumatoriaAbsoluta(vector<int> s, int desde, int hasta){
+    int suma = 0;
+    for(int i = desde; i<hasta ; i++){
+        suma = suma + abs(s[i]);
+    }
+    return suma;
+}
+
+bool esReunionValida(reunion const &r, int prof, int freq) {
+    bool result = r.size() > 0;
+    result = result && esMatriz(r);
+    result = result && senialesValidas(r,prof,freq);
+    result = result && hablantesDeReunionValidos(r,prof,freq);
     return result;
 }
-bool seEnojo2(senial const& s, int umbral, int prof, int freq) {
-    bool resp = false;
-    for(int i = s.size() ; i>=21 && (resp == false) ; i--){
-        resp = resp || hayTonoDeTamanioSQueSupera(s, i, umbral);
-    }
-    return resp;
-}
-//un caso sería(supongamos que la frecuencia es 2/s): s = {10,21,15,25,5,2,16,13}, umbral = 20 , prof = 4 -> max(s) = 31 min(s)=-32
 
-bool esReunionValida(reunion const& r, int prof, int freq) {
-    bool resp = true;
-    resp = resp && r.size()>0;
-    int nFilas = r[0].first.size();
-    bool tamanioDeSenialCorrecto = true, senialValida=true , idEnRango= true, sinRepetidos = true;
-
-    for(int i = 0 ; i<r.size() ;i++){
-        tamanioDeSenialCorrecto = tamanioDeSenialCorrecto && r[i].first.size() == nFilas;
-        senialValida = senialValida && esSenial(r[i].first,prof,freq);
-        idEnRango = idEnRango && r[i].second>=0 && r[i].second<r.size();
-        sinRepetidos = sinRepetidos && (r[i].second != r[i+1].second);
-
-    }
-    resp = tamanioDeSenialCorrecto && senialValida && idEnRango && sinRepetidos;
-    return resp;
-
-}
 
 void acelerar(reunion& r, int prof, int freq) {
     // Implementacions
@@ -137,11 +136,29 @@ bool hablantesSuperpuestos(reunion const& r, int prof , int freq , int umbral ){
 
 
 
-senial reconstruir(senial const& s, int prof, int freq) {
-    senial senalReconstruida;
-    // Implementacion
-    return senalReconstruida;
+senial reconstruir(senial const &s, int prof, int freq){
+
+    senial s0 = s;
+
+
+    for(int i = 0 ; i < s.size() ; i++){
+
+        if(s0[i] == 0 ) {
+            if (esPasajePorCero(s0, i)) {
+                s0[i] = 0;
+            } else {
+                //a promedioValores le paso la senial original, no la que se va modificando
+                s0[i] = promedioValores(s, i);
+            }
+        }
+
+    }
+
+    //s0 = s;
+
+    return s0;
 }
+
 
 
 void filtradoMediana(senial& s, int R, int prof , int freq){
